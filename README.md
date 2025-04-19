@@ -11,6 +11,8 @@
 - [Attach usb device to wsl2](https://learn.microsoft.com/windows/wsl/connect-usb#attach-a-usb-device)
 - Install `sudo apt install arduino arduino-core-avr arduino-mk avrdude`
 
+Attach USB to WSL2: `bashusbipd attach --wsl --busid 1-1`
+
 ### Hardware
 
 ![Wiring plan](fritzing/circuit.png)

@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <DHT.h>
+#include <PWM.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-#include <PWM.h>
-#include <U8glib.h>
+// #include <U8glib.h>
 
 #define DHTPIN 2
 #define DHTTYPE DHT11
@@ -32,10 +32,10 @@ const uint8_t FRAME2[] PROGMEM = {0x00, 0x00, 0x00, 0x00, 0x01, 0xf0, 0x03, 0xf8
 bool tiktok = false;
 bool fanOn = false;
 
-// Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // Initialize display.
-U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_NONE | U8G_I2C_OPT_DEV_0);
+// U8GLIB_SSD1306_128X64 u8g(U8G_I2C_OPT_DEV_0 | U8G_I2C_OPT_NO_ACK | U8G_I2C_OPT_FAST);
 
 DHT dht(DHTPIN, DHTTYPE);
 
@@ -71,7 +71,7 @@ void drawFan(int16_t x, int16_t y, uint16_t color)
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
     InitTimersSafe();                                   // not sure what this is for, but I think i need it for PWM control?
     bool success = SetPinFrequencySafe(PWM_PIN, 25000); // set frequency to 25kHz
@@ -87,20 +87,21 @@ void setup()
     dht.begin();
 
     // Set font.
-    u8g.setFont(u8g_font_unifont);
+    // u8g.setFont(u8g_font_unifont);
+    // u8g.setColorIndex(1);
 
-    // if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
-    // {
-    //     Serial.println(F("SSD1306 allocation failed"));
-    //     for (;;)
-    //         ;
-    // }
-    // display.display();
-    // delay(2000);
-    // display.clearDisplay();
-    // display.setTextSize(1);
-    // display.setTextColor(SSD1306_WHITE);
-    // display.setRotation(2);
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+    {
+        Serial.println(F("SSD1306 allocation failed"));
+        for (;;)
+            ;
+    }
+    display.display();
+    delay(2000);
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+    display.setRotation(2);
 }
 
 void loop()
@@ -123,38 +124,32 @@ void loop()
     }
     pwmWrite(PWM_PIN, map(fanSpeed, 0, 100, 0, 255));
 
-    u8g.firstPage();
-    do
-    {
-        draw();
-    } while (u8g.nextPage());
+    // u8g.firstPage();
+    // do
+    // {
+    //     draw();
+    // } while (u8g.nextPage());
 
-    // display.clearDisplay();
-    // display.setCursor(0, 0);
+    display.clearDisplay();
+    display.setCursor(0, 0);
 
-    // display.print("FAN SPEED: ");
-    // display.print(fanSpeed);
-    // display.println(" %");
+    display.print("FAN SPEED: ");
+    display.print(fanSpeed);
+    display.println(" %");
 
-    // display.print("TEMP: ");
-    // display.print(String(temp));
-    // display.println(" C");
+    display.print("TEMP: ");
+    display.print(String(temp));
+    display.println(" C");
 
-    // display.setCursor(0, 50);
-    // display.print("DEACTIVATE");
+    display.setCursor(0, 50);
+    display.print("DEACTIVATE");
 
-    // display.setCursor(80, 50);
-    // display.print("ACTIVATE");
+    display.setCursor(80, 50);
+    display.print("ACTIVATE");
 
-    // drawFan(112, 0, WHITE);
+    drawFan(112, 0, WHITE);
 
-    // display.display();
+    display.display();
 
     delay(100);
-}
-
-void draw(void)
-{
-    // Write text. (x, y, text)
-    u8g.drawStr(20, 40, "Hello World.");
 }

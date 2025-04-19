@@ -6,7 +6,7 @@ USER_LIB_PATH = /home/johann/Arduino/libraries
 OBJDIR = build
 
 TARGET = main.cpp
-ARDUINO_LIBS = SPI Wire Adafruit_BusIO Adafruit_GFX_Library Adafruit_SSD1306 Adafruit_Unified_Sensor DHT_sensor_library PWM TimerOne U8glib
+ARDUINO_LIBS = SPI Wire Adafruit_BusIO Adafruit_Unified_Sensor DHT_sensor_library PWM TimerOne Adafruit_GFX_Library Adafruit_SSD1306 # U8glib
 
 LOCAL_C_SRCS    ?= $(wildcard src/*.c)
 LOCAL_CPP_SRCS  ?= $(wildcard src/*.cpp)
